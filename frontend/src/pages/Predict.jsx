@@ -2,7 +2,7 @@
 import { useState } from "react";
 import axios from "axios";
 
-const API_BASE = "http://agriyield-backend-c5nc.onrender.com";
+const API_BASE = "https://agriyield-backend-c5nc.onrender.com";
 
 const cropTypes = [
   "Wheat",
@@ -213,5 +213,6 @@ export default function Predict() {
     </div>
   );
 }
+
 
 
