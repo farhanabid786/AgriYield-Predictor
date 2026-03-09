@@ -19,16 +19,15 @@
 
 ---
 
-# 🎬 Application Demo
+# 🎬 Project Demo
 
 <p align="center">
 
-<img src="https://user-images.githubusercontent.com/placeholder/agriyield-demo.gif" width="800">
+[![AgriYield Predictor Demo](https://img.youtube.com/vi/5UqpzGgKfBg/maxresdefault.jpg)](https://youtu.be/5UqpzGgKfBg)
 
 </p>
 
-*(Replace this GIF with a screen recording of your app)*
-
+▶ Click the image above to watch the full demo of the AgriYield Predictor web application.
 ---
 
 # 🚀 Live Application
@@ -326,5 +325,6 @@ If you like this project:
 
 © 2025 Farhan Abid  
 All rights reserved.
+
 
 
