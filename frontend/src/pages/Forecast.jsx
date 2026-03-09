@@ -208,28 +208,29 @@ export default function Forecast() {
           </p>
           <div className="grid md:grid-cols-4 gap-4">
             {[
-              ["Temperature", "Temperature (°C)"],
-              ["Humidity", "Humidity (%)"],
-              ["Wind_Speed", "Wind Speed (km/h)"],
-              ["Soil_pH", "Soil pH"],
-              ["Soil_Quality", "Soil Quality Index"],
-              ["N", "N (kg/ha)"],
-              ["P", "P (kg/ha)"],
-              ["K", "K (kg/ha)"],
-            ].map(([key, label]) => (
+  ["Temperature", "Temperature (°C)", 0, 50, 0.1],
+  ["Humidity", "Humidity (%)", 0, 100, 1],
+  ["Wind_Speed", "Wind Speed (km/h)", 0, 50, 0.1],
+  ["Soil_pH", "Soil pH", 3, 9, 0.1],
+  ["Soil_Quality", "Soil Quality Index", 0, 100, 1],
+  ["N", "N (kg/ha)", 0, 200, 1],
+  ["P", "P (kg/ha)", 0, 200, 1],
+  ["K", "K (kg/ha)", 0, 200, 1],
+].map(([key, label, min, max, step]) => (
               <div key={key}>
                 <label className="block text-xs font-semibold text-slate-700 mb-1">
                   {label}
                 </label>
-                <input
-                  type="number"
-                  step="any"
-                  name={key}
-                  value={regressors[key]}
-                  onChange={handleRegressorChange}
-                  className="w-full rounded-xl border border-emerald-100 bg-white px-3 py-2 text-xs sm:text-sm focus:border-emerald-400 focus:ring-2 focus:ring-emerald-200"
-                  required
-                />
+               <input
+  type="number"
+  name={key}
+  min={min}
+  max={max}
+  step={step}
+  value={regressors[key]}
+  onChange={handleRegressorChange}
+  className="w-full rounded-xl border border-emerald-100 bg-white px-3 py-2"
+/>
               </div>
             ))}
           </div>
@@ -363,3 +364,4 @@ export default function Forecast() {
     </div>
   );
 }
+
