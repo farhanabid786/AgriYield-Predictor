@@ -19,15 +19,16 @@
 
 ---
 
-# 🎬 Project Demo
+# 🎥 AgriYield Predictor Demo
+
+Watch the full working demonstration of the **AI-powered crop yield prediction and forecasting platform**.
 
 <p align="center">
 
-[![AgriYield Predictor Demo](https://img.youtube.com/vi/5UqpzGgKfBg/maxresdefault.jpg)](https://youtu.be/5UqpzGgKfBg)
+[![Watch Demo](https://img.youtube.com/vi/5UqpzGgKfBg/maxresdefault.jpg)](https://youtu.be/5UqpzGgKfBg)
 
 </p>
 
-▶ Click the image above to watch the full demo of the AgriYield Predictor web application.
 ---
 
 # 🚀 Live Application
@@ -325,6 +326,7 @@ If you like this project:
 
 © 2025 Farhan Abid  
 All rights reserved.
+
 
 
 
