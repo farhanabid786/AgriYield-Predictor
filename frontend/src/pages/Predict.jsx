@@ -148,28 +148,30 @@ export default function Predict() {
             {/* Numeric inputs */}
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
               {[
-                ["Soil_pH", "Soil pH", "6.5"],
-                ["Soil_Quality", "Soil Quality Index", "50"],
-                ["Humidity", "Humidity (%)", "60"],
-                ["Temperature", "Temperature (°C)", "25"],
-                ["Wind_Speed", "Wind Speed (km/h)", "10"],
-                ["N", "Nitrogen (N) kg/ha", "40"],
-                ["P", "Phosphorus (P) kg/ha", "30"],
-                ["K", "Potassium (K) kg/ha", "30"],
-              ].map(([name, label, placeholder]) => (
+  ["Soil_pH", "Soil pH", "6.5", 3, 9, 0.1],
+  ["Soil_Quality", "Soil Quality Index", "50", 0, 100, 1],
+  ["Humidity", "Humidity (%)", "60", 0, 100, 1],
+  ["Temperature", "Temperature (°C)", "25", 0, 50, 0.1],
+  ["Wind_Speed", "Wind Speed (km/h)", "10", 0, 50, 0.1],
+  ["N", "Nitrogen (N) kg/ha", "40", 0, 200, 1],
+  ["P", "Phosphorus (P) kg/ha", "30", 0, 200, 1],
+  ["K", "Potassium (K) kg/ha", "30", 0, 200, 1],
+].map(([name, label, placeholder, min, max, step]) => (
                 <div key={name} className="space-y-2">
                   <label className="block text-sm font-medium text-emerald-900">
                     {label}
                   </label>
-                  <input
-                    type="number"
-                    step="any"
-                    name={name}
-                    value={form[name]}
-                    onChange={handleChange}
-                    placeholder={placeholder}
-                    className="w-full rounded-2xl border border-emerald-100 bg-emerald-50/60 px-4 py-2.5 text-emerald-900 focus:outline-none focus:ring-2 focus:ring-emerald-400"
-                  />
+                 <input
+  type="number"
+  name={name}
+  value={form[name]}
+  min={min}
+  max={max}
+  step={step}
+  onChange={handleChange}
+  placeholder={placeholder}
+  className="w-full rounded-2xl border border-emerald-100 bg-emerald-50/60 px-4 py-2.5 text-emerald-900"
+/>
                 </div>
               ))}
             </div>
@@ -213,6 +215,7 @@ export default function Predict() {
     </div>
   );
 }
+
 
 
 
