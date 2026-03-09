@@ -7,3 +7,4 @@ joblib
 prophet
 pydantic
 python-dateutil
+gdown
