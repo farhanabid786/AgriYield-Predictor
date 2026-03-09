@@ -8,3 +8,4 @@ prophet
 pydantic
 python-dateutil
 gdown
+category_encoders
