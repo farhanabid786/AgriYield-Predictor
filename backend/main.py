@@ -364,50 +364,76 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# ---------------------------
 # Google Drive RF model
+# ---------------------------
 
 RF_FILE_ID = "1tvGJeijPaf9zSYAK-6QHcWqObzNMXt2V"
 RF_MODEL_PATH = "SavedModel.pkl"
 
-def download_rf_model():
-    """
-    Download RF model from Google Drive if not present
-    """
-    if not os.path.exists(RF_MODEL_PATH):
+# ---------------------------
+# Global model variables
+# ---------------------------
 
-        print("Downloading SavedModel.pkl from Google Drive...")
-
-        url = f"https://drive.google.com/uc?id={RF_FILE_ID}"
-
-        gdown.download(url, RF_MODEL_PATH, quiet=False)
-
-        print("Download complete.")
-
-# Ensure RF model exists
-
-download_rf_model()
-
-# Load models
-
-try:
-
-    rf_model = joblib.load(RF_MODEL_PATH)
-    feature_order = joblib.load("featuresaved.pkl")
-    prophet_model = joblib.load("prophet_model.pkl")
-    prophet_scaler = joblib.load("prophet_scaler.pkl")
-
-except Exception as e:
-
-    raise RuntimeError("Failed loading models: " + str(e))
-
+rf_model = None
+feature_order = None
+prophet_model = None
+prophet_scaler = None
 
 prophet_regressors = [
     "Temperature", "Humidity", "Wind_Speed", "Soil_pH",
     "N", "P", "K", "Soil_Quality"
 ]
 
-# Request schemas
 
+# ---------------------------
+# Download RF model if missing
+# ---------------------------
+
+def download_rf_model():
+
+    if not os.path.exists(RF_MODEL_PATH):
+
+        print("Downloading RF model from Google Drive...")
+
+        url = f"https://drive.google.com/uc?id={RF_FILE_ID}"
+
+        gdown.download(url, RF_MODEL_PATH, quiet=False)
+
+        print("RF model download complete")
+
+
+# ---------------------------
+# Startup event (BEST PRACTICE)
+# ---------------------------
+
+@app.on_event("startup")
+def load_models():
+
+    global rf_model, feature_order, prophet_model, prophet_scaler
+
+    try:
+
+        download_rf_model()
+
+        print("Loading models...")
+
+        rf_model = joblib.load(RF_MODEL_PATH)
+        feature_order = joblib.load("featuresaved.pkl")
+        prophet_model = joblib.load("prophet_model.pkl")
+        prophet_scaler = joblib.load("prophet_scaler.pkl")
+
+        print("Models loaded successfully")
+
+    except Exception as e:
+
+        print("Model loading failed:", str(e))
+        raise RuntimeError("Failed loading models")
+
+
+# ---------------------------
+# Request schemas
+# ---------------------------
 
 class CropInput(BaseModel):
 
@@ -426,31 +452,33 @@ class CropInput(BaseModel):
 class ProphetNextNDays(BaseModel):
 
     days: int = Field(..., example=7, gt=0)
-    Temperature: float = Field(..., example=28.0)
-    Humidity: float = Field(..., example=65.0)
-    Wind_Speed: float = Field(..., example=3.5)
-    Soil_pH: float = Field(..., example=6.5)
-    N: float = Field(..., example=90.0)
-    P: float = Field(..., example=40.0)
-    K: float = Field(..., example=35.0)
-    Soil_Quality: float = Field(..., example=8.0)
+    Temperature: float
+    Humidity: float
+    Wind_Speed: float
+    Soil_pH: float
+    N: float
+    P: float
+    K: float
+    Soil_Quality: float
 
 
 class ProphetDateRange(BaseModel):
 
-    start_date: str = Field(..., example="2026-01-01")
-    end_date: str = Field(..., example="2026-01-10")
-    Temperature: float = Field(..., example=28.0)
-    Humidity: float = Field(..., example=65.0)
-    Wind_Speed: float = Field(..., example=3.5)
-    Soil_pH: float = Field(..., example=6.5)
-    N: float = Field(..., example=90.0)
-    P: float = Field(..., example=40.0)
-    K: float = Field(..., example=35.0)
-    Soil_Quality: float = Field(..., example=8.0)
+    start_date: str
+    end_date: str
+    Temperature: float
+    Humidity: float
+    Wind_Speed: float
+    Soil_pH: float
+    N: float
+    P: float
+    K: float
+    Soil_Quality: float
 
 
-# Helper function
+# ---------------------------
+# Helper
+# ---------------------------
 
 def _scale_regressors_single(reg_dict):
 
@@ -463,12 +491,14 @@ def _scale_regressors_single(reg_dict):
     return scaled_df.iloc[0]
 
 
+# ---------------------------
 # Endpoints
+# ---------------------------
 
 @app.get("/")
 def root():
 
-    return {"message": "AgriYield API running."}
+    return {"message": "AgriYield API running"}
 
 
 @app.post("/predict_rf")
@@ -477,7 +507,6 @@ def predict_rf(data: CropInput):
     try:
 
         input_df = pd.DataFrame([data.dict()])
-
         input_df = input_df[feature_order]
 
         pred = rf_model.predict(input_df)[0]
@@ -488,7 +517,7 @@ def predict_rf(data: CropInput):
 
         traceback.print_exc()
 
-        raise HTTPException(status_code=500, detail=f"Prediction failed: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
 
 
 @app.post("/forecast_next_days")
@@ -517,22 +546,22 @@ def forecast_next_days(req: ProphetNextNDays):
 
         fc = prophet_model.predict(future).tail(req.days)
 
-        daily = fc[["ds", "yhat"]].rename(columns={"yhat": "predicted_yield"})
-
-        avg = float(daily["predicted_yield"].mean())
+        daily = fc[["ds","yhat"]].rename(columns={"yhat":"predicted_yield"})
 
         daily["predicted_yield"] = daily["predicted_yield"].round(3)
 
+        avg = float(daily["predicted_yield"].mean())
+
         return {
             "daily_predicted_yield": daily.to_dict(orient="records"),
-            "average_predicted_yield": round(avg, 3)
+            "average_predicted_yield": round(avg,3)
         }
 
     except Exception as e:
 
         traceback.print_exc()
 
-        raise HTTPException(status_code=500, detail=f"Forecast failed: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
 
 
 @app.post("/forecast_range")
@@ -540,7 +569,7 @@ def forecast_range(req: ProphetDateRange):
 
     try:
 
-        dates = pd.date_range(start=req.start_date, end=req.end_date, freq="D")
+        dates = pd.date_range(start=req.start_date,end=req.end_date,freq="D")
 
         reg = {
             "Temperature": req.Temperature,
@@ -555,7 +584,7 @@ def forecast_range(req: ProphetDateRange):
 
         reg_scaled_series = _scale_regressors_single(reg)
 
-        future = pd.DataFrame({"ds": dates})
+        future = pd.DataFrame({"ds":dates})
 
         for col in prophet_regressors:
 
@@ -563,7 +592,7 @@ def forecast_range(req: ProphetDateRange):
 
         fc = prophet_model.predict(future)
 
-        daily = fc[["ds", "yhat"]].rename(columns={"yhat": "predicted_yield"})
+        daily = fc[["ds","yhat"]].rename(columns={"yhat":"predicted_yield"})
 
         daily["predicted_yield"] = daily["predicted_yield"].round(3)
 
@@ -571,11 +600,11 @@ def forecast_range(req: ProphetDateRange):
 
         return {
             "dates_and_yield": daily.to_dict(orient="records"),
-            "average_predicted_yield": round(avg, 3)
+            "average_predicted_yield": round(avg,3)
         }
 
     except Exception as e:
 
         traceback.print_exc()
 
-        raise HTTPException(status_code=500, detail=f"Forecast failed: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
