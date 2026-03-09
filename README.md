@@ -3,7 +3,7 @@
 
 <p align="center">
 
-![Python](https://img.shields.io/badge/Python-3.11-blue)
+![Python](https://img.shields.io/badge/Python-3.14-blue)
 ![FastAPI](https://img.shields.io/badge/FastAPI-Backend-green)
 ![React](https://img.shields.io/badge/React-Frontend-blue)
 ![Tailwind](https://img.shields.io/badge/TailwindCSS-UI-teal)
@@ -322,3 +322,4 @@ If you like this project:
 
 © 2025 Farhan Abid  
 All rights reserved.
+
