@@ -15,7 +15,11 @@
 
 ---
 
-# Main Github Repository :- https://github.com/springboardmentor789r/AgriYield
+# Main Github Repository :- 
+
+# Access branch Intern_FA for my contribution
+
+# https://github.com/springboardmentor789r/AgriYield
 
 ---
 
@@ -326,6 +330,7 @@ If you like this project:
 
 © 2025 Farhan Abid  
 All rights reserved.
+
 
 
 
