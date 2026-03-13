@@ -113,7 +113,7 @@ Example output chart:
 
 <p align="center">
 
-<img src="https://quickchart.io/chart?c={type:'line',data:{labels:['Day1','Day2','Day3','Day4'],datasets:[{label:'Predicted Yield',data:[3.2,3.4,3.7,3.6]}]}}">
+<img src="https://quickchart.io/chart?c={type:'line',data:{labels:['Day1','Day2','Day3','Day4'],datasets:[{label:'Yield',data:[3.2,3.4,3.7,3.6]}]}}">
 
 </p>
 
@@ -328,6 +328,7 @@ If you like this project:
 
 © 2025 Farhan Abid  
 All rights reserved.
+
 
 
 
